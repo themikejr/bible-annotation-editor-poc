@@ -1,0 +1,132 @@
+/* App.css */
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+.editor-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.editor-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.editor-description {
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.editor-content-area {
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  min-height: 300px;
+}
+
+.editor-main {
+  font-family: serif;
+  line-height: 1.6;
+}
+
+/* Customize this to match your design */
+.bubble-menu {
+  display: flex;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 0.25rem;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.bubble-button {
+  padding: 0.35rem 0.75rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.bubble-button-question:hover {
+  background-color: #e6f7ff;
+}
+
+.bubble-button-warning:hover {
+  background-color: #fff3e0;
+}
+
+.editor-controls {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.control-button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-weight: 500;
+  border: none;
+}
+
+.question-button {
+  background-color: #e6f7ff;
+  color: #0066cc;
+  border: 1px solid #0066cc;
+}
+
+.warning-button {
+  background-color: #fff3e0;
+  color: #ff6d00;
+  border: 1px solid #ff6d00;
+}
+
+.editor-instructions {
+  background-color: #f5f5f5;
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.instructions-title {
+  font-size: 1.25rem;
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+
+.instructions-list {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.instructions-list li {
+  margin-bottom: 0.5rem;
+}
+
+/* Styling for the Bible annotations */
+[data-bible-question] {
+  background-color: #e6f7ff;
+  color: #0066cc;
+  border-bottom: 2px dotted #0066cc;
+  padding: 2px;
+  border-radius: 4px;
+}
+
+[data-bible-warning] {
+  background-color: #fff3e0;
+  color: #ff6d00;
+  border-bottom: 2px dotted #ff6d00;
+  padding: 2px;
+  border-radius: 4px;
+}
