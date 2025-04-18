@@ -1,0 +1,132 @@
+/* DiscourseEditor.css - Styling for the discourse section component */
+
+/* General discourse section styling */
+.discourse-section {
+  position: relative;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.discourse-section:hover {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Header with badge and controls */
+.discourse-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+/* Badge showing section type */
+.discourse-section-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border-radius: 1rem;
+  color: white;
+  text-transform: uppercase;
+}
+
+/* Controls for section type and nesting */
+.discourse-section-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.discourse-type-selector {
+  font-size: 0.8rem;
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  border: 1px solid #ddd;
+}
+
+.add-nested-button {
+  font-size: 0.8rem;
+  padding: 0.2rem 0.4rem;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.add-nested-button:hover {
+  background-color: #e0e0e0;
+}
+
+/* Content area */
+.discourse-section-content {
+  min-height: 1.5rem;
+}
+
+/* Specific section type styling */
+.discourse-premise {
+  --section-color: #6d9eeb;
+}
+
+.discourse-claim {
+  --section-color: #e06666;
+}
+
+.discourse-evidence {
+  --section-color: #93c47d;
+}
+
+.discourse-objection {
+  --section-color: #c27ba0;
+}
+
+.discourse-rebuttal {
+  --section-color: #f6b26b;
+}
+
+.discourse-conclusion {
+  --section-color: #8e7cc3;
+}
+
+.discourse-question {
+  --section-color: #76a5af;
+}
+
+.discourse-answer {
+  --section-color: #d5a6bd;
+}
+
+/* Show relationships visually */
+.level-0 {
+  margin-bottom: 1.5rem;
+}
+
+.level-1 {
+  margin-bottom: 1.25rem;
+}
+
+.level-2 {
+  margin-bottom: 1rem;
+}
+
+.level-3,
+.level-4,
+.level-5 {
+  margin-bottom: 0.75rem;
+}
+
+/* Visual connections between nested sections */
+.discourse-section .discourse-section::before {
+  content: "";
+  position: absolute;
+  left: -20px;
+  top: -10px;
+  width: 15px;
+  height: 20px;
+  border-left: 2px solid #ccc;
+  border-bottom: 2px solid #ccc;
+  border-bottom-left-radius: 5px;
+}
+
+/* Focus and active states */
+.discourse-section.ProseMirror-selectednode {
+  outline: 2px solid var(--section-color, #ccc);
+}

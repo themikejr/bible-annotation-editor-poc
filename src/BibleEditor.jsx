@@ -7,7 +7,7 @@ import { Mark } from '@tiptap/core';
 import BibleTextImporter from './BibleTextImporter';
 
 // Custom mark for Bible annotations with badges
-const BibleAnnotation = Mark.create({
+export const BibleAnnotation = Mark.create({
   name: 'bibleAnnotation',
 
   addAttributes() {
