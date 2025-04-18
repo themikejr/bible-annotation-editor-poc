@@ -1,4 +1,4 @@
-/* App.css with inline badge styling */
+/* App.css with improved annotations and highlighting */
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -49,14 +49,13 @@ body {
   margin-right: 0.25rem;
 }
 
-/* Bible annotation styling */
+/* Bible annotation styling - IMPROVED */
 .bible-annotation {
   position: relative;
-  display: inline-flex;
-  align-items: baseline;
-  margin-right: 0.25rem;
+  display: inline;
 }
 
+/* For the label */
 .annotation-badge {
   display: inline-block;
   font-size: 0.7rem;
@@ -70,10 +69,28 @@ body {
   top: -1px;
 }
 
+/* For the content itself */
 .annotation-content {
-  position: relative;
+  display: inline;
 }
 
+/* Background colors for the annotation content */
+.annotation-warning .annotation-content {
+  background-color: rgba(231, 76, 60, 0.1);
+  border-bottom: 1px solid rgba(231, 76, 60, 0.3);
+}
+
+.annotation-instruction .annotation-content {
+  background-color: rgba(52, 152, 219, 0.1);
+  border-bottom: 1px solid rgba(52, 152, 219, 0.3);
+}
+
+.annotation-question .annotation-content {
+  background-color: rgba(155, 89, 182, 0.1);
+  border-bottom: 1px solid rgba(155, 89, 182, 0.3);
+}
+
+/* Badge colors */
 .annotation-warning .annotation-badge {
   background-color: #e74c3c;
 }

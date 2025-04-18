@@ -1,4 +1,4 @@
-// BibleEditor.jsx with Importer
+// BibleEditor.jsx with improved mark rendering and clearing
 import React, { useState } from 'react';
 import { useEditor, EditorContent, BubbleMenu } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
@@ -46,6 +46,7 @@ const BibleAnnotation = Mark.create({
       typeClass = 'annotation-question';
     }
 
+    // Improved rendering to fix indentation issue
     return ['span',
       {
         'data-bible-annotation': '',
@@ -112,22 +113,35 @@ const BibleEditor = () => {
 
   const markAsWarning = () => {
     if (!editor) return;
+    // First unset any existing annotation to ensure clean application
+    if (editor.isActive('bibleAnnotation')) {
+      editor.chain().focus().unsetAnnotation().run();
+    }
     editor.chain().focus().setAnnotationType('warning').run();
   };
 
   const markAsInstruction = () => {
     if (!editor) return;
+    // First unset any existing annotation to ensure clean application
+    if (editor.isActive('bibleAnnotation')) {
+      editor.chain().focus().unsetAnnotation().run();
+    }
     editor.chain().focus().setAnnotationType('instruction').run();
   };
 
   const markAsQuestion = () => {
     if (!editor) return;
+    // First unset any existing annotation to ensure clean application
+    if (editor.isActive('bibleAnnotation')) {
+      editor.chain().focus().unsetAnnotation().run();
+    }
     editor.chain().focus().setAnnotationType('question').run();
   };
 
   const clearMark = () => {
     if (!editor) return;
-    editor.chain().focus().unsetAnnotation().run();
+    // Improved clearing to ensure it works properly
+    editor.chain().focus().unsetMark('bibleAnnotation').run();
   };
 
   return (
@@ -203,7 +217,7 @@ const BibleEditor = () => {
         <ul className="instructions-list">
           <li>Select any text by highlighting it</li>
           <li>Use the buttons to mark the selection as a Warning, Instruction, or Question</li>
-          <li>The text will show a badge with the corresponding label</li>
+          <li>The text will show a badge with the corresponding label and highlight the text</li>
           <li>Use the bubble menu that appears when text is selected for quick access</li>
           <li>Use the Clear Mark button to remove annotations</li>
           <li>Use the Import Bible Text button to add new content</li>
