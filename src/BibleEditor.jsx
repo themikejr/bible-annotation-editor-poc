@@ -1,10 +1,9 @@
-// BibleEditor.jsx with badge click selection
+// BibleEditor.jsx with fixed badge click handling
 import React, { useState, useEffect } from 'react';
 import { useEditor, EditorContent, BubbleMenu } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import TextStyle from '@tiptap/extension-text-style';
 import { Mark } from '@tiptap/core';
-import { Plugin, PluginKey } from 'prosemirror-state';
 import BibleTextImporter from './BibleTextImporter';
 
 // Custom mark for Bible annotations with badges
@@ -75,46 +74,6 @@ const BibleAnnotation = Mark.create({
       },
     };
   },
-
-  // Add plugin to handle badge clicks
-  addProseMirrorPlugins() {
-    return [
-      new Plugin({
-        key: new PluginKey('badgeClickHandler'),
-        props: {
-          handleClick(view, pos, event) {
-            // Check if the click was on a badge
-            if (event.target.hasAttribute('data-badge-selectable')) {
-              // Find the parent annotation span
-              const annotationSpan = event.target.closest('.bible-annotation');
-              if (!annotationSpan) return false;
-
-              // Find the position of the span in the document
-              const domPos = view.posAtDOM(annotationSpan, 0);
-              if (domPos === undefined) return false;
-
-              // Determine the end position by adding the length of the content
-              const annotationContent = annotationSpan.querySelector('.annotation-content');
-              if (!annotationContent) return false;
-
-              const contentLength = annotationContent.textContent.length;
-
-              // Set selection to cover the entire annotated span
-              const tr = view.state.tr.setSelection(
-                view.state.schema.text.create({}, contentLength),
-                domPos,
-                domPos + contentLength
-              );
-              view.dispatch(tr);
-
-              return true;
-            }
-            return false;
-          }
-        }
-      })
-    ];
-  }
 });
 
 // Sample Bible text with verse numbers
@@ -170,6 +129,9 @@ const BibleEditor = () => {
 
         // Focus the editor
         editor.commands.focus();
+
+        // Prevent default behavior
+        event.preventDefault();
       }
     };
 
