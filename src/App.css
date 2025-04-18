@@ -1,4 +1,4 @@
-/* App.css */
+/* App.css with inline badge styling */
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -42,7 +42,51 @@ body {
   line-height: 1.6;
 }
 
-/* Customize this to match your design */
+/* Verse number styling */
+.editor-main p strong {
+  color: #555;
+  font-weight: 600;
+  margin-right: 0.25rem;
+}
+
+/* Bible annotation styling */
+.bible-annotation {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  margin-right: 0.25rem;
+}
+
+.annotation-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.1rem 0.4rem;
+  border-radius: 1rem;
+  color: white;
+  text-transform: uppercase;
+  margin-right: 0.25rem;
+  position: relative;
+  top: -1px;
+}
+
+.annotation-content {
+  position: relative;
+}
+
+.annotation-warning .annotation-badge {
+  background-color: #e74c3c;
+}
+
+.annotation-instruction .annotation-badge {
+  background-color: #3498db;
+}
+
+.annotation-question .annotation-badge {
+  background-color: #9b59b6;
+}
+
+/* Bubble menu styling */
 .bubble-menu {
   display: flex;
   background-color: white;
@@ -57,20 +101,35 @@ body {
   background: none;
   border: none;
   cursor: pointer;
+  font-size: 0.8rem;
 }
 
-.bubble-button-question:hover {
-  background-color: #e6f7ff;
+.bubble-warning:hover {
+  background-color: #fdeded;
+  color: #e74c3c;
 }
 
-.bubble-button-warning:hover {
-  background-color: #fff3e0;
+.bubble-instruction:hover {
+  background-color: #eef5fd;
+  color: #3498db;
 }
 
+.bubble-question:hover {
+  background-color: #f5eef8;
+  color: #9b59b6;
+}
+
+.bubble-clear:hover {
+  background-color: #f5f5f5;
+  color: #555;
+}
+
+/* Control buttons */
 .editor-controls {
   display: flex;
   gap: 0.75rem;
   margin-bottom: 1.5rem;
+  flex-wrap: wrap;
 }
 
 .control-button {
@@ -79,20 +138,61 @@ body {
   cursor: pointer;
   font-weight: 500;
   border: none;
+  transition: all 0.2s ease;
 }
 
-.question-button {
-  background-color: #e6f7ff;
-  color: #0066cc;
-  border: 1px solid #0066cc;
+.control-button.active {
+  transform: scale(1.05);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .warning-button {
-  background-color: #fff3e0;
-  color: #ff6d00;
-  border: 1px solid #ff6d00;
+  background-color: #fdeded;
+  color: #e74c3c;
+  border: 1px solid #e74c3c;
 }
 
+.warning-button:hover,
+.warning-button.active {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.instruction-button {
+  background-color: #eef5fd;
+  color: #3498db;
+  border: 1px solid #3498db;
+}
+
+.instruction-button:hover,
+.instruction-button.active {
+  background-color: #3498db;
+  color: white;
+}
+
+.question-button {
+  background-color: #f5eef8;
+  color: #9b59b6;
+  border: 1px solid #9b59b6;
+}
+
+.question-button:hover,
+.question-button.active {
+  background-color: #9b59b6;
+  color: white;
+}
+
+.clear-button {
+  background-color: #f5f5f5;
+  color: #555;
+  border: 1px solid #ddd;
+}
+
+.clear-button:hover {
+  background-color: #e0e0e0;
+}
+
+/* Instructions panel */
 .editor-instructions {
   background-color: #f5f5f5;
   padding: 1rem;
@@ -114,19 +214,78 @@ body {
   margin-bottom: 0.5rem;
 }
 
-/* Styling for the Bible annotations */
-[data-bible-question] {
-  background-color: #e6f7ff;
-  color: #0066cc;
-  border-bottom: 2px dotted #0066cc;
-  padding: 2px;
-  border-radius: 4px;
+/* Bible Text Importer Styles */
+.bible-importer {
+  margin-bottom: 2rem;
 }
 
-[data-bible-warning] {
-  background-color: #fff3e0;
-  color: #ff6d00;
-  border-bottom: 2px dotted #ff6d00;
-  padding: 2px;
-  border-radius: 4px;
+.importer-toggle-button {
+  padding: 0.5rem 1rem;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.importer-toggle-button:hover {
+  background-color: #e0e0e0;
+}
+
+.importer-panel {
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background-color: #f9f9f9;
+}
+
+.importer-panel h3 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+
+.importer-instructions {
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.importer-textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 0.25rem;
+  font-family: inherit;
+  margin-bottom: 1rem;
+  resize: vertical;
+}
+
+.importer-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.importer-cancel-button {
+  padding: 0.5rem 1rem;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.importer-submit-button {
+  padding: 0.5rem 1rem;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.importer-submit-button:disabled {
+  background-color: #a0cfee;
+  cursor: not-allowed;
 }
