@@ -1,9 +1,10 @@
-// BibleEditor.jsx with improved mark rendering and clearing
-import React, { useState } from 'react';
+// BibleEditor.jsx with badge click selection
+import React, { useState, useEffect } from 'react';
 import { useEditor, EditorContent, BubbleMenu } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import TextStyle from '@tiptap/extension-text-style';
 import { Mark } from '@tiptap/core';
+import { Plugin, PluginKey } from 'prosemirror-state';
 import BibleTextImporter from './BibleTextImporter';
 
 // Custom mark for Bible annotations with badges
@@ -46,14 +47,16 @@ const BibleAnnotation = Mark.create({
       typeClass = 'annotation-question';
     }
 
-    // Improved rendering to fix indentation issue
     return ['span',
       {
         'data-bible-annotation': '',
         'data-annotation-type': type,
         'class': `bible-annotation ${typeClass}`
       },
-      ['span', { class: 'annotation-badge' }, typeLabel],
+      ['span', {
+        class: 'annotation-badge',
+        'data-badge-selectable': 'true'
+      }, typeLabel],
       ['span', { class: 'annotation-content' }, 0]
     ];
   },
@@ -72,6 +75,46 @@ const BibleAnnotation = Mark.create({
       },
     };
   },
+
+  // Add plugin to handle badge clicks
+  addProseMirrorPlugins() {
+    return [
+      new Plugin({
+        key: new PluginKey('badgeClickHandler'),
+        props: {
+          handleClick(view, pos, event) {
+            // Check if the click was on a badge
+            if (event.target.hasAttribute('data-badge-selectable')) {
+              // Find the parent annotation span
+              const annotationSpan = event.target.closest('.bible-annotation');
+              if (!annotationSpan) return false;
+
+              // Find the position of the span in the document
+              const domPos = view.posAtDOM(annotationSpan, 0);
+              if (domPos === undefined) return false;
+
+              // Determine the end position by adding the length of the content
+              const annotationContent = annotationSpan.querySelector('.annotation-content');
+              if (!annotationContent) return false;
+
+              const contentLength = annotationContent.textContent.length;
+
+              // Set selection to cover the entire annotated span
+              const tr = view.state.tr.setSelection(
+                view.state.schema.text.create({}, contentLength),
+                domPos,
+                domPos + contentLength
+              );
+              view.dispatch(tr);
+
+              return true;
+            }
+            return false;
+          }
+        }
+      })
+    ];
+  }
 });
 
 // Sample Bible text with verse numbers
@@ -104,6 +147,38 @@ const BibleEditor = () => {
       setSelectedAnnotationType(annotationType);
     },
   });
+
+  useEffect(() => {
+    // Add a global click handler for badges
+    const handleBadgeClick = (event) => {
+      if (event.target.hasAttribute('data-badge-selectable') && editor) {
+        const annotationSpan = event.target.closest('.bible-annotation');
+        if (!annotationSpan) return;
+
+        // Get the annotation content element
+        const contentElement = annotationSpan.querySelector('.annotation-content');
+        if (!contentElement) return;
+
+        // We'll use DOM selection API for more direct control
+        const selection = window.getSelection();
+        const range = document.createRange();
+
+        // Select the content of the annotation
+        range.selectNodeContents(contentElement);
+        selection.removeAllRanges();
+        selection.addRange(range);
+
+        // Focus the editor
+        editor.commands.focus();
+      }
+    };
+
+    document.addEventListener('click', handleBadgeClick);
+
+    return () => {
+      document.removeEventListener('click', handleBadgeClick);
+    };
+  }, [editor]);
 
   const handleTextImport = (html) => {
     if (editor) {
@@ -218,6 +293,7 @@ const BibleEditor = () => {
           <li>Select any text by highlighting it</li>
           <li>Use the buttons to mark the selection as a Warning, Instruction, or Question</li>
           <li>The text will show a badge with the corresponding label and highlight the text</li>
+          <li>Click on any badge to select the entire annotated text (for easy modification)</li>
           <li>Use the bubble menu that appears when text is selected for quick access</li>
           <li>Use the Clear Mark button to remove annotations</li>
           <li>Use the Import Bible Text button to add new content</li>
