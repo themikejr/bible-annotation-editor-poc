@@ -3,10 +3,12 @@ import React, { useState } from 'react';
 import { useEditor, EditorContent, BubbleMenu } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import TextStyle from '@tiptap/extension-text-style';
-import { BibleAnnotation } from './BibleEditor'; // Reusing your annotation extension
+import { createBibleAnnotation } from './BibleEditor'; // Reusing your annotation extension
 import DiscourseSection from './DiscourseSection';
 import './DiscourseEditor.css';
 import discourseBibleSample from './discourseBibleSample';
+
+const BibleAnnotation = createBibleAnnotation();
 
 // Sample discourse structure
 const sampleDiscourseText = `

@@ -1,80 +1,11 @@
-// BibleEditor.jsx with fixed badge click handling
-import React, { useState, useEffect } from 'react';
+// BibleEditor.jsx with tooltip explanations for badges
+import React, { useState, useEffect, useMemo } from 'react';
 import { useEditor, EditorContent, BubbleMenu } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import TextStyle from '@tiptap/extension-text-style';
 import { Mark } from '@tiptap/core';
 import BibleTextImporter from './BibleTextImporter';
-
-// Custom mark for Bible annotations with badges
-export const BibleAnnotation = Mark.create({
-  name: 'bibleAnnotation',
-
-  addAttributes() {
-    return {
-      type: {
-        default: null, // Can be 'warning', 'instruction', 'question', etc.
-      }
-    };
-  },
-
-  parseHTML() {
-    return [
-      {
-        tag: 'span[data-bible-annotation]',
-        getAttrs: element => ({
-          type: element.getAttribute('data-annotation-type'),
-        }),
-      },
-    ];
-  },
-
-  renderHTML({ HTMLAttributes }) {
-    const type = HTMLAttributes.type;
-
-    let typeLabel = '';
-    let typeClass = '';
-
-    if (type === 'warning') {
-      typeLabel = 'WARNING';
-      typeClass = 'annotation-warning';
-    } else if (type === 'instruction') {
-      typeLabel = 'INSTRUCTION';
-      typeClass = 'annotation-instruction';
-    } else if (type === 'question') {
-      typeLabel = 'QUESTION';
-      typeClass = 'annotation-question';
-    }
-
-    return ['span',
-      {
-        'data-bible-annotation': '',
-        'data-annotation-type': type,
-        'class': `bible-annotation ${typeClass}`
-      },
-      ['span', {
-        class: 'annotation-badge',
-        'data-badge-selectable': 'true'
-      }, typeLabel],
-      ['span', { class: 'annotation-content' }, 0]
-    ];
-  },
-
-  addCommands() {
-    return {
-      setAnnotationType: type => ({ chain }) => {
-        return chain()
-          .setMark('bibleAnnotation', { type })
-          .run();
-      },
-      unsetAnnotation: () => ({ chain }) => {
-        return chain()
-          .unsetMark('bibleAnnotation')
-          .run();
-      },
-    };
-  },
-});
+import DescriptionSettings from './DescriptionSettings';
 
 // Sample Bible text with verse numbers
 const sampleBibleText = `
@@ -85,8 +16,103 @@ const sampleBibleText = `
 <p><strong>36</strong> Be always on the watch, and pray that you may be able to escape all that is about to happen, and that you may be able to stand before the Son of Man."</p>
 `;
 
+// Default badge descriptions
+const defaultBadgeDescriptions = {
+  warning: "Warning passages alert readers to potential spiritual dangers or consequences. These passages often emphasize the seriousness of certain actions or attitudes.",
+  instruction: "Instruction passages provide direct guidance or commands for believers to follow. These are key teachings that offer practical direction.",
+  question: "Question passages pose important theological inquiries or rhetorical questions that drive deeper contemplation of biblical truths."
+};
+
+// Factory function to create the Bible Annotation extension with descriptions
+export const createBibleAnnotation = (descriptions) => {
+  return Mark.create({
+    name: 'bibleAnnotation',
+
+    addAttributes() {
+      return {
+        type: {
+          default: null, // Can be 'warning', 'instruction', 'question', etc.
+        }
+      };
+    },
+
+    parseHTML() {
+      return [
+        {
+          tag: 'span[data-bible-annotation]',
+          getAttrs: element => ({
+            type: element.getAttribute('data-annotation-type'),
+          }),
+        },
+      ];
+    },
+
+    renderHTML({ HTMLAttributes }) {
+      const type = HTMLAttributes.type;
+
+      let typeLabel = '';
+      let typeClass = '';
+
+      if (type === 'warning') {
+        typeLabel = 'WARNING';
+        typeClass = 'annotation-warning';
+      } else if (type === 'instruction') {
+        typeLabel = 'INSTRUCTION';
+        typeClass = 'annotation-instruction';
+      } else if (type === 'question') {
+        typeLabel = 'QUESTION';
+        typeClass = 'annotation-question';
+      }
+
+      // Add description as a title attribute for native browser tooltip
+      // Also add a data attribute for custom tooltip implementation
+      const description = descriptions[type] || '';
+
+      return ['span',
+        {
+          'data-bible-annotation': '',
+          'data-annotation-type': type,
+          'class': `bible-annotation ${typeClass}`
+        },
+        ['span', {
+          class: 'annotation-badge',
+          'data-badge-selectable': 'true',
+          'title': description,
+          'data-tooltip': description
+        }, typeLabel],
+        ['span', { class: 'annotation-content' }, 0]
+      ];
+    },
+
+    addCommands() {
+      return {
+        setAnnotationType: type => ({ chain }) => {
+          return chain()
+            .setMark('bibleAnnotation', { type })
+            .run();
+        },
+        unsetAnnotation: () => ({ chain }) => {
+          return chain()
+            .unsetMark('bibleAnnotation')
+            .run();
+        },
+      };
+    },
+  });
+};
+
 const BibleEditor = () => {
   const [selectedAnnotationType, setSelectedAnnotationType] = useState(null);
+  const [badgeDescriptions, setBadgeDescriptions] = useState(defaultBadgeDescriptions);
+
+  const handleDescriptionsUpdate = (newDescriptions) => {
+    setBadgeDescriptions(newDescriptions);
+  };
+
+  // Create the BibleAnnotation extension with current descriptions
+  const BibleAnnotation = useMemo(() => {
+    return createBibleAnnotation(badgeDescriptions);
+  }, [badgeDescriptions]);
 
   const editor = useEditor({
     extensions: [
@@ -105,7 +131,7 @@ const BibleEditor = () => {
 
       setSelectedAnnotationType(annotationType);
     },
-  });
+  }, [BibleAnnotation]); // Re-initialize editor when BibleAnnotation changes
 
   useEffect(() => {
     // Add a global click handler for badges
@@ -188,6 +214,11 @@ const BibleEditor = () => {
 
       <BibleTextImporter onImport={handleTextImport} />
 
+      <DescriptionSettings
+        descriptions={badgeDescriptions}
+        onUpdate={handleDescriptionsUpdate}
+      />
+
       <div className="editor-content-area">
         {editor && (
           <BubbleMenu editor={editor} tippyOptions={{ duration: 100 }}>
@@ -195,18 +226,21 @@ const BibleEditor = () => {
               <button
                 onClick={markAsWarning}
                 className="bubble-button bubble-warning"
+                title={badgeDescriptions.warning}
               >
                 Warning
               </button>
               <button
                 onClick={markAsInstruction}
                 className="bubble-button bubble-instruction"
+                title={badgeDescriptions.instruction}
               >
                 Instruction
               </button>
               <button
                 onClick={markAsQuestion}
                 className="bubble-button bubble-question"
+                title={badgeDescriptions.question}
               >
                 Question
               </button>
@@ -226,18 +260,21 @@ const BibleEditor = () => {
         <button
           onClick={markAsWarning}
           className={`control-button warning-button ${selectedAnnotationType === 'warning' ? 'active' : ''}`}
+          title={badgeDescriptions.warning}
         >
           Mark as Warning
         </button>
         <button
           onClick={markAsInstruction}
           className={`control-button instruction-button ${selectedAnnotationType === 'instruction' ? 'active' : ''}`}
+          title={badgeDescriptions.instruction}
         >
           Mark as Instruction
         </button>
         <button
           onClick={markAsQuestion}
           className={`control-button question-button ${selectedAnnotationType === 'question' ? 'active' : ''}`}
+          title={badgeDescriptions.question}
         >
           Mark as Question
         </button>
@@ -255,6 +292,7 @@ const BibleEditor = () => {
           <li>Select any text by highlighting it</li>
           <li>Use the buttons to mark the selection as a Warning, Instruction, or Question</li>
           <li>The text will show a badge with the corresponding label and highlight the text</li>
+          <li>Hover over badges to see more detailed explanations</li>
           <li>Click on any badge to select the entire annotated text (for easy modification)</li>
           <li>Use the bubble menu that appears when text is selected for quick access</li>
           <li>Use the Clear Mark button to remove annotations</li>

@@ -313,3 +313,164 @@ body {
   background-color: #a0cfee;
   cursor: not-allowed;
 }
+
+/* CSS for enhanced tooltips on badges */
+
+/* Base badge styles */
+.annotation-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.1rem 0.4rem;
+  border-radius: 1rem;
+  color: white;
+  text-transform: uppercase;
+  margin-right: 0.25rem;
+  position: relative;
+  top: -1px;
+  cursor: pointer;
+}
+
+/* Hover effect */
+.annotation-badge:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* 
+  Option 1: Simple built-in browser tooltip
+  Just add title attribute to the element (already done in the JSX)
+*/
+
+/* 
+  Option 2: Custom tooltip using data attributes and CSS
+  This provides more styling control than native tooltips
+*/
+.annotation-badge {
+  position: relative; /* Required for custom tooltip positioning */
+}
+
+.annotation-badge::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 5px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  padding: 0.5rem;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: normal;
+  text-transform: none;
+  text-align: center;
+  line-height: 1.3;
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.3s,
+    visibility 0.3s;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+/* Show tooltip on hover */
+.annotation-badge:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Arrow pointing down from the tooltip */
+.annotation-badge::before {
+  content: "";
+  position: absolute;
+  bottom: calc(100% + 5px);
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: rgba(0, 0, 0, 0.8);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.3s,
+    visibility 0.3s;
+  z-index: 10;
+}
+
+.annotation-badge:hover::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Type-specific tooltip styling */
+.annotation-warning:hover::after {
+  border-color: rgba(231, 76, 60, 0.8);
+}
+
+.annotation-instruction:hover::after {
+  border-color: rgba(52, 152, 219, 0.8);
+}
+
+.annotation-question:hover::after {
+  border-color: rgba(155, 89, 182, 0.8);
+}
+
+/* Tooltip positioning for the bubble menu */
+.bubble-button {
+  position: relative; /* Required for custom tooltip positioning */
+}
+
+.bubble-button::after {
+  content: attr(title);
+  position: absolute;
+  bottom: calc(100% + 5px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  padding: 0.5rem;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  font-size: 0.75rem;
+  text-align: center;
+  line-height: 1.3;
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.3s,
+    visibility 0.3s;
+  white-space: normal;
+}
+
+.bubble-button:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Optional: Animation for tooltip appearance */
+@keyframes tooltipFade {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.annotation-badge:hover::after {
+  animation: tooltipFade 0.2s ease-out forwards;
+}
+
+/* Make sure tooltips don't get cut off at screen edges */
+@media (max-width: 768px) {
+  .annotation-badge::after {
+    width: 150px;
+  }
+}
