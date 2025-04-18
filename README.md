@@ -1,6 +1,6 @@
 # Bible Text Editor
 
-**_Proof of Concept_**
+**_A messy Proof of Concept_**
 
 A React-based Bible text editor with annotation capabilities built on TipTap.
 
