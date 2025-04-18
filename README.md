@@ -1,12 +1,49 @@
-# React + Vite
+# Bible Text Editor
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**_Proof of Concept_**
 
-Currently, two official plugins are available:
+A React-based Bible text editor with annotation capabilities built on TipTap.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+- Mark text as warnings, instructions, or questions
+- Inline annotation badges
+- Text highlighting for annotations
+- Click on badges to select annotated text spans
+- Bubble menu for quick annotations
+- Bible text importing with verse number detection
+- Clean, modern UI
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Installation
+
+```bash
+# Clone repository
+git clone [your-repo-url]
+cd bible-editor
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
+
+## Usage
+
+1. Select text by highlighting it
+2. Use the annotation buttons to mark as Warning, Instruction, or Question
+3. Click any badge to select its content for editing/clearing
+4. Import Bible text using the Import button
+
+## Structure
+
+- **BibleEditor.jsx** - Main editor component with TipTap integration
+- **BibleTextImporter.jsx** - Text import functionality
+- **BibleParser.js** - Utility for parsing Bible text with verse numbers
+- **App.css** - Styling for the application
+
+## Technologies
+
+- React
+- TipTap
+- Vite
